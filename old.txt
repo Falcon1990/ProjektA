@@ -1,0 +1,97 @@
+const fileExists = require('file-exists');
+const sqllite3 = require('sqlite3').verbose();
+
+let surveyDB = new sqllite3.Database('surveyDB.db', (error) => {
+	if (error) {
+		console.error(error.message);
+	}
+});
+
+if (!fileExists('/surveyDB')) {
+	surveyDB.run('CREATE TABLE surveyDB(id INTEGER PRIMARY KEY AUTOINCREMENT, surveyName TEXT NOT NULL, surveyNumber TEXT NOT NULL)');
+}
+
+let userDB = new sqllite3.Database('userDB.db', (error) => {
+	if (error) {
+		console.error(error.message);
+	}
+	console.log("Connected to User Database");
+});
+
+if (!fileExists('/userDB')) {
+	userDB.run('CREATE TABLE userDB(id INTEGER PRIMARY KEY AUTOINCREMENT, user TEXT NOT NULL, password TEXT NOT NULL)');
+}
+
+app.post('/Login', function (req, res) {
+	const username = req.body["User"];
+	const password = req.body["Psw"];
+	const loginSQL = 'SELECT * FROM userDB WHERE user=${User}, password=${Psw}';
+	userDB.each(loginSQL, (error, result) => {
+		if (error) {
+			res.render('error', {
+				message: "failed to Login"
+			});
+		} else {
+			req.session['authenticated'] = true;
+			req.session['User'] = username;
+			res.redirect('/content');
+			userDB.close();
+			return result;
+		}
+	});
+
+});
+
+app.post('/Register', function (req, res) {
+	const username = req.body["User"];
+	const password = req.body["Psw"];
+	const registerSQL = 'INSERT INTO userDB VALUE (user, password)';
+	userDB.run(registerSQL, (error, result) => {
+		if (error) {
+			res.render('error', {
+				message: "Registration failed"
+			});
+		} else {
+			req.session['authenticated'] = true;
+			req.session['User'] = username;
+			res.redirect('/content');
+			userDB.close();
+			return result;
+		}
+	});
+
+});
+
+app.get('/content', function (req, res) {
+	if (req.session['authenticated'] == true) {
+		const username = req.session['username'];
+		res.render('content', {
+			'user': username
+		});
+	} else {
+		res.render('error', {
+			message: "Login first please"
+		});
+	}
+});
+
+app.get('/logout', function (req, res) {
+	delete req.session['authenticated'];
+	res.redirect('/login');
+});
+
+app.post('/partakeSurvey', function (req, res) {
+	const srvyName = req.body['SurveyName'];
+	const partakeSQL = 'SELECT surveyName FROM surveyDB WHERE surveyName=${srvyName}';
+	surveyDB.each(partakeSQL, (error, result) => {
+		if (error) {
+			res.render('error', {
+				message: "No such Survey found"
+			});
+		} else {
+			req.session['User'] = username;
+			res.redirect(__dirname + '/' + srvyName);
+			surveyDB.close();
+		}
+	});
+});
