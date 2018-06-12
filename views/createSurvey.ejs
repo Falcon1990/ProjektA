@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Create a Survey</title>
+    <meta name="2ewport" content="width=de2ce-width, initial-scale=1">
+    <script src="/dynamicForm.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script>   
+      /* prototype of customizeable Survey   
+        $('#addButton1').dynamicForm({
+              deleteButtonDiv: 'delete-button-div',
+              deleteButtonClass: 'delete-button',
+              deleteButtonValue: 'Delete This Fieldset',
+              maxFields: false,
+              numTimes: 1,
+              fadeDuration: 'slow'
+          });
+
+    /*  
+    $(document).ready(function() {
+			// When the button is clicked..
+			$("#submit").click(function(){
+				// Use JQuery to get everything between the html tags
+				var htmlText = $('#question-form').text( $("html").clone().html() ) ;
+				return false;
+			});
+    })
+        
+    function createSurvey(){
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function(){
+    if(xmlhttp.readyState==4 && xmlhttp.status==200)
+    alert("webpage " + xmlhttp.responseText + " was successfully created! Note the id, so people can search for it!");
+    }
+    var content ="<html>" +  htmlText + "</html>";
+    xmlhttp.open("GET","createPage.php?content=" + content,true);
+    xmlhttp.send();
+    } */
+
+    </script> 
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+
+        
+        .form button {
+            font-family: "Roboto", sans-serif;
+            text-transform: uppercase;
+            outline: 0;
+            background: #4CAF50;
+            width: 100%;
+            border: 0;
+            padding: 15px;
+            color: #FFFFFF;
+            font-size: 14px;
+            -webkit-transition: all 0.3 ease;
+            transition: all 0.3 ease;
+            cursor: pointer;
+        }
+
+        body {
+            background: #76b852; /* fallback for old browsers */
+            background: -webkit-linear-gradient(right, #76b852, #8DC26F);
+            background: -moz-linear-gradient(right, #76b852, #8DC26F);
+            background: -o-linear-gradient(right, #629944, #8DC26F);
+            background: linear-gradient(to left, #76b852, #8DC26F);
+            font-family: "Roboto", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;      
+    	}
+
+        .form fieldset{
+            background-color: #FFFFFF;
+            width: 350px;
+            padding: 8px;
+            border: 8;
+        }
+        .form .question-form .description {
+            width: auto;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <form class="surveyname" action="#" method="post">
+        <label>Survey Name <p id="SurveyName">Test Survey</p> </label><br />
+    </form>
+
+<div class="form">
+    <form class="question-form" method="post" action="#">
+        <fieldset name="question">
+            <label>Question <p  name="description" > How do you like the current Weather?</p> </label><br />
+            <input type="radio" id="1" name="answer" value="not at all"><label for="1"> not at all</label>
+            <input type="radio" id="2" name="answer" value="partly no"> <label for="2"> partly no</label> 
+            <input type="radio" id="3" name="answer" value="neutral"> <label for="3"> neutral</label>
+            <input type="radio" id="4" name="answer" value="partly yes"> <label for="4"> partly yes</label> 
+            <input type="radio" id="5" name="answer" value="absolutely"> <label for="5"> absolutely</label> 
+        </fieldset>
+
+        <fieldset name="question">
+            <label>Question <p  class="description"> Are you happy?</p> </label><br />
+            <input type="radio" id="1" name="answer" value="not at all"><label for="1"> not at all</label>
+            <input type="radio" id="2" name="answer" value="partly no"> <label for="2"> partly no</label> 
+            <input type="radio" id="3" name="answer" value="neutral"> <label for="3"> neutral</label>
+            <input type="radio" id="4" name="answer" value="partly yes"> <label for="4"> partly yes</label> 
+            <input type="radio" id="5" name="answer" value="absolutely"> <label for="5"> absolutely</label> 
+        </fieldset>
+
+        <fieldset name="question">
+            <label>Question <p  id="description"> Would you vote for Trump?</p> </label><br />
+            <input type="radio" id="1" name="answer" value="not at all"><label for="1"> not at all</label>
+            <input type="radio" id="2" name="answer" value="partly no"> <label for="2"> partly no</label> 
+            <input type="radio" id="3" name="answer" value="neutral"> <label for="3"> neutral</label>
+            <input type="radio" id="4" name="answer" value="partly yes"> <label for="4"> partly yes</label> 
+            <input type="radio" id="5" name="answer" value="absolutely"> <label for="5"> absolutely</label> 
+        </fieldset>
+        
+      <!-- <input type="button" id="addButton1" name="add" value="Add another Question" class="add-button" /><br/> -->
+       <input type="submit" id="submit" name="submit" value="Submit" class="submit-button" formaction="/submit"/>
+   </form>
+</div>
+
+<script>
+    var SurveyName = $("#SurveyName").text();
+</script>
+</body>
+

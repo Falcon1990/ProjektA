@@ -131,7 +131,13 @@ module.exports = function (passport) {
             }
         });
 
+        var description = [];
+        var answer = [];
         var AllQuestions = document.body.getElementsByTagName("fieldset");
+        for(i=0; i < AllQuestions.length; i++) {
+            description[i] = AllQuestions[i];
+            answer[i]= AllQuestions[++i];
+        }
 
             //ansync
             process.nextTick(function(){
@@ -145,8 +151,9 @@ module.exports = function (passport) {
 
                     var newSubmit = new Data();
 
-                    newSubmit.survey.submitID = newSubmit.generateID();
-                    newSubmit.survey.question = AllQuestions;
+                    newSubmit.surveySchema.submitID = newSubmit.generateID();
+                    newSubmit.questionSchema.questions = description;
+                    newSubmit.questionSchema.answer = answer;
                      
                     newSubmit.save(function (err) {
                         if (err)
@@ -166,7 +173,7 @@ module.exports = function (passport) {
          process.nextTick(function(){
 
              Data.findOne({
-                 'survey.surveyname': sName
+                 'survey.secret': req.body['SurveyNumber']
                 }, function(err) {
     
                     if(err)
