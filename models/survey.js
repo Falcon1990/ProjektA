@@ -3,22 +3,24 @@ var plugin = require('plugin');
 var mongoose_csv = require('mongoose-csv');
 var Schema = mongoose.Schema;
 
+var surveySchema = new Schema({
 
-var surveySchema = Schema({
-
+    survey: {
     surveyname : String,
     submitID : Number,
     secret: {type : Number, csv : false},
     questions : [{type :Schema.Types.ObjectId, ref: 'Question' }]
-            
+    }
     
 }, {strict: false});
 
-var questionSchema = Schema({
+var questionSchema =  new Schema({
     
+    questions:{
     survey : [{type :Schema.Types.ObjectId, ref: 'Survey'}],
     description : String,
     answer : String
+    }
 
 }, {strict: false});
 

@@ -38,7 +38,7 @@ module.exports = function(app, passport) {
         // Login ============================
     
             app.get('/login', function(req, res) {
-            res.render('login.ejs', { message: req.flash('loginMessage', 'registerMessage') });
+            res.render('login.ejs', { message: req.flash('loginMessage') });
             });
 
             // process the login form
@@ -77,7 +77,7 @@ module.exports = function(app, passport) {
         app.post('/submit',  function(req, res ) {
 
             var newSurvey = new Data();
-            var sName =  testsurvey;
+            var sName =  "testsurvey";
     
             Data.findOne({
                'survey.surveyname': sName
@@ -120,9 +120,9 @@ module.exports = function(app, passport) {
     
                         var newSubmit = new Data();
     
-                        newSubmit.surveySchema.submitID = newSubmit.generateID();
-                        newSubmit.questionSchema.questions = description;
-                        newSubmit.questionSchema.answer = answer;
+                        newSubmit.survey.submitID = newSubmit.generateID();
+                        newSubmit.questions.description = description;
+                        newSubmit.questions.answer = answer;
                          
                         newSubmit.save(function (err) {
                             if (err)
