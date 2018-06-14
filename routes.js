@@ -74,31 +74,30 @@ module.exports = function(app, passport) {
                 }
         });
 
-        app.post('/submit',  function(req, done) {
+        app.post('/submit',  function(req, res ) {
 
             var newSurvey = new Data();
             var sName =  testsurvey;
     
             Data.findOne({
                'survey.surveyname': sName
-            }, function(err, sName) {
-    
-                if(err)
-                    return done(err);
-            
-    
-                else {
+            }, function(err, sName) {              
                     
-                    newSurvey.survey.secret = 1234;
-                    newSurvey.survey.surveyname = sName;
+                newSurvey.survey.secret = 1234;
+                newSurvey.survey.surveyname = sName;
     
-                    newSurvey.save(function (err) {
-                        if (err)
-                            return done(err);
+                newSurvey.save(function (err) {
+                    if (err)
+                        return (err);
     
-                        return done(null, newSurvey);
+                        return (null, newSurvey);
                     });
-                }
+
+                
+                    if(err){
+                    return err;
+                    }
+                
             });
     
             var description = [];
@@ -117,7 +116,7 @@ module.exports = function(app, passport) {
                     }, function(err) {
     
                         if(err)
-                            return done(err);
+                            return (err);
     
                         var newSubmit = new Data();
     
@@ -127,9 +126,9 @@ module.exports = function(app, passport) {
                          
                         newSubmit.save(function (err) {
                             if (err)
-                                return done(err);
+                                return (err);
         
-                            return done(null, newSubmit);
+                            return (null, newSubmit);
                         });
                     }
                 );
@@ -137,7 +136,7 @@ module.exports = function(app, passport) {
                 });
             });
 
-        app.get('/export',  function(req, res, done) {
+        app.get('/export',  function(req, res ) {
 
             //ansync
              process.nextTick(function(){
@@ -147,7 +146,7 @@ module.exports = function(app, passport) {
                     }, function(err) {
         
                         if(err)
-                            return done(err);
+                            return (err);
     
                         }
                     ).csv(res);
