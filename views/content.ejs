@@ -79,7 +79,7 @@ body {
         <div class="form">
 
             <form id="1" class="searchSurvey" action="/search"  method="post">
-                <input type="search" placeholder="Search for Survey" name="SurveyName" required>
+                <input type="text" placeholder="Search for Survey" name="SurveyName" required>
                 <button>Search</button>
             </form>
     
@@ -87,7 +87,10 @@ body {
                 <input type="password" placeholder="The Number of your Survey" name="SurveyNumber" required>
                 <button>Get Data</button>
             </form>
-            <button formaction="/logout" formmethod="POST">Logout</button>
+            <form action="/logout" method="post">
+                <button>Logout</button>
+            </form>
+            
         </div>
     </div>
 

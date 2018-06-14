@@ -1,7 +1,6 @@
 var LocalStrategy = require('passport-local').Strategy;
 
 var User = require('../models/user');
-var Data = require('../models/survey');
 
 // expose our config directly to our application using module.exports
 module.exports = function (passport) {
@@ -103,7 +102,7 @@ module.exports = function (passport) {
             });
 
         }));
-
+/*
     passport.use('submit', function(req, done) {
 
         var newSurvey = new Data();
@@ -184,5 +183,5 @@ module.exports = function (passport) {
     
                 });
 
-    });
+    });*/
 }

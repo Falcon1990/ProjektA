@@ -1,4 +1,5 @@
 var Survey = require('./models/survey');
+var Data = require('./models/survey');
 
 module.exports = function(app, passport) {
 
@@ -22,6 +23,12 @@ module.exports = function(app, passport) {
             });
         });
 
+        app.get('/test', isLoggedIn, function(req, res) {
+            res.render('test', {
+                user : req.user
+            });
+        });
+
         app.post('/logout', function(req, res) {
             req.logout();
             res.redirect('/login');
@@ -31,7 +38,7 @@ module.exports = function(app, passport) {
         // Login ============================
     
             app.get('/login', function(req, res) {
-            res.render('login.ejs', { message: req.flash('loginMessage') });
+            res.render('login.ejs', { message: req.flash('loginMessage', 'registerMessage') });
             });
 
             // process the login form
@@ -58,21 +65,96 @@ module.exports = function(app, passport) {
 
         // process queries
 
-        app.post('/search', function(req, res) {
+        app.post('/search', function(req, res, err) {
             var searchValue = req.body['SurveyName'];
+            res.redirect('/' + searchValue);
             
                 if(err) {
-                    return done(null, false, req.flash('searchMessage', 'No such Survey found found.'));
-                }
-
-                else {
-                    res.redirect(__dirname + '/views/' + searchValue);
+                    {message: req.flash('No such survey found!')}
                 }
         });
 
-        app.post('/submit', passport.authenticate('submit'));
+        app.post('/submit',  function(req, done) {
 
-        app.get('/export', passport.authenticate('export'));
+            var newSurvey = new Data();
+            var sName =  testsurvey;
+    
+            Data.findOne({
+               'survey.surveyname': sName
+            }, function(err, sName) {
+    
+                if(err)
+                    return done(err);
+            
+    
+                else {
+                    
+                    newSurvey.survey.secret = 1234;
+                    newSurvey.survey.surveyname = sName;
+    
+                    newSurvey.save(function (err) {
+                        if (err)
+                            return done(err);
+    
+                        return done(null, newSurvey);
+                    });
+                }
+            });
+    
+            var description = [];
+            var answer = [];
+            var AllQuestions = document.body.getElementsByTagName("fieldset");
+            for(i=0; i < AllQuestions.length; i++) {
+                description[i] = AllQuestions[i];
+                answer[i]= AllQuestions[++i];
+            }
+    
+                //ansync
+                process.nextTick(function(){
+    
+                    Data.findOne({
+                        'survey.surveyname': sName
+                    }, function(err) {
+    
+                        if(err)
+                            return done(err);
+    
+                        var newSubmit = new Data();
+    
+                        newSubmit.surveySchema.submitID = newSubmit.generateID();
+                        newSubmit.questionSchema.questions = description;
+                        newSubmit.questionSchema.answer = answer;
+                         
+                        newSubmit.save(function (err) {
+                            if (err)
+                                return done(err);
+        
+                            return done(null, newSubmit);
+                        });
+                    }
+                );
+    
+                });
+            });
+
+        app.get('/export',  function(req, res, done) {
+
+            //ansync
+             process.nextTick(function(){
+    
+                 Data.findOne({
+                     'survey.secret': req.body['SurveyNumber']
+                    }, function(err) {
+        
+                        if(err)
+                            return done(err);
+    
+                        }
+                    ).csv(res);
+        
+                    });
+    
+        });
 
         /* Protoype of the create custom Survey
         app.post('/createSurvey', function (req, res) {

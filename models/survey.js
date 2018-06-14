@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
+var plugin = require('plugin');
 var mongoose_csv = require('mongoose-csv');
-schema.plugin(mongoose_csv);
 var Schema = mongoose.Schema;
 
 
@@ -21,6 +21,9 @@ var questionSchema = Schema({
     answer : String
 
 }, {strict: false});
+
+surveySchema.plugin(mongoose_csv);
+questionSchema.plugin(mongoose_csv);
 
 surveySchema.methods.whichSurvey = function(surveyname){
         return (surveyname == this.survey.surveyname);
