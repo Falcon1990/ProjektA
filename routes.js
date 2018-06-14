@@ -1,5 +1,5 @@
-var Survey = require('./models/survey');
 var Data = require('./models/survey');
+var mongoose_csv = require('mongoose-csv');
 
 module.exports = function(app, passport) {
 
@@ -70,18 +70,23 @@ module.exports = function(app, passport) {
             res.redirect('/' + searchValue);
             
                 if(err) {
-                    {message: req.flash('No such survey found!')}
+                     req.flash('loginMessage', 'No such survey found!')
                 }
         });
 
         app.post('/submit',  function(req, res ) {
 
-            var newSurvey = new Data();
             var sName =  "testsurvey";
     
             Data.findOne({
                'survey.surveyname': sName
-            }, function(err, sName) {              
+            }, function(err, sName) {       
+                
+                if(err){
+                    return err;
+                    }
+                
+                var newSurvey = new Data();
                     
                 newSurvey.survey.secret = 1234;
                 newSurvey.survey.surveyname = sName;
@@ -92,21 +97,8 @@ module.exports = function(app, passport) {
     
                         return (null, newSurvey);
                     });
-
-                
-                    if(err){
-                    return err;
-                    }
                 
             });
-    
-            var description = [];
-            var answer = [];
-            var AllQuestions = document.body.getElementsByTagName("fieldset");
-            for(i=0; i < AllQuestions.length; i++) {
-                description[i] = AllQuestions[i];
-                answer[i]= AllQuestions[++i];
-            }
     
                 //ansync
                 process.nextTick(function(){
@@ -121,17 +113,30 @@ module.exports = function(app, passport) {
                         var newSubmit = new Data();
     
                         newSubmit.survey.submitID = newSubmit.generateID();
-                        newSubmit.questions.description = description;
-                        newSubmit.questions.answer = answer;
+
+                        for(var description in req.body) {
+                            if(req.body.hasOwnProperty(description)) {
+                                newSubmit.survey.questions.description = req.body[description];
+                            }
+                        }
+
+                        for(var answer in req.body) {
+                            if(req.body.hasOwnProperty(answer)) {
+                                newSubmit.survey.questions.answer = req.body[answer];
+                            }
+                        }
                          
                         newSubmit.save(function (err) {
                             if (err)
                                 return (err);
         
                             return (null, newSubmit);
+                    
                         });
+                       
                     }
                 );
+                res.redirect('/content');
     
                 });
             });
